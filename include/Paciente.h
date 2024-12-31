@@ -1,0 +1,44 @@
+#ifndef PACIENTE_H
+#define PACIENTE_H
+
+#include "Data.h"
+
+
+/*
+ * Estrutura de um Paciente
+ *
+ * Armazena as informações de um Paciente do hospital, que são
+ * identificador do paciente, se teve alta ou não, as informações
+ * da data de adimissão (ano, mês, dia e hora), o grau de urgência,
+ * a quantidade de medidas hospitalares, de testes de laboratório,
+ * de exames de imagem e de instrumentos/medicamentos, o estado
+ * do Paciente, o id da unidade que o Paciente está sendo atendido,
+ * o período atual (armazena o tempo final do atendimento e o último
+ * horário do relógio do hospital) e os horários de tempo em que o 
+ * Paciente esteve ocioso e em atendimento.
+*/
+typedef struct {
+    //prontuario do paciente
+    float id;
+    int alta;
+    Data dataAdmissao;
+    int grauUrgencia;
+    int quantidades[4];
+
+    //estado e estatisticas
+    int estado;
+    int idUnidade;
+    Data dataInicio;
+    Data dataFim;
+    float tempoAtendido;
+    float tempoOcioso;
+} Paciente;
+
+
+Paciente* inicializaPaciente(float id, int alta, int ano, int mes, int dia, float hora, int gu, int qMH, int qTL, int qEI, int qIM);
+int comparaPacientes(Paciente *p1, Paciente *p2, char *op);
+void atualizaAtePaciente(Paciente *p, Data horarioAtual);
+void atualizaOciPaciente(Paciente *p, Data horarioAtual);
+void imprimePaciente(Paciente *p);
+
+#endif
