@@ -86,49 +86,14 @@ int comparaPacientes(Paciente *p1, Paciente *p2, char *op) {
         return -1;
     }
 
-    if (p1->estado == 0 || p1->estado == 1 || p2->estado == 0 || p2->estado == 1) {
-        if (!strcmp("<", op)) {
-            if (dataIgual(p1->dataFim, p2->dataFim)) {
-                if (p1->id < p2->id) return 1;
-                else return 0;
-
-            } else return dataMenor(p1->dataFim, p2->dataFim);
-
-        }
+    if (!strcmp("<", op)) {
+        if (dataIgual (p1->dataFim, p2->dataFim)) return p1->id < p2->id;
+        return dataMenor(p1->dataFim, p2->dataFim);
+    }
     
-        if (!strcmp(">", op)) {
-            if (dataIgual(p1->dataFim, p2->dataFim)) {
-                if (p1->id > p2->id) return 1;
-                else return 0;
-
-            } else return dataMenor(p2->dataFim, p1->dataFim);
-        }
-        
-    } else {
-        if (!strcmp("<", op)) {
-            if (dataIgual(p1->dataFim, p2->dataFim)) {
-                if (p1->grauUrgencia > p2->grauUrgencia) return 1;
-                else if (p1->grauUrgencia < p2->grauUrgencia) return 0;
-                else {
-                    if (p1->id < p2->id) return 1;
-                    else return 0;
-                }
-
-            } else return dataMenor(p1->dataFim, p2->dataFim);
-
-        }
-    
-        if (!strcmp(">", op)) {
-            if (dataIgual(p1->dataFim, p2->dataFim)) {
-                if (p1->grauUrgencia < p2->grauUrgencia) return 1;
-                else if (p1->grauUrgencia > p2->grauUrgencia) return 0;
-                else {
-                    if (p1->id > p2->id) return 1;
-                    else return 0;
-                }
-
-            } else return dataMenor(p2->dataFim, p1->dataFim);
-        }
+    if (!strcmp(">", op)) {
+        if (dataIgual(p1->dataFim, p2->dataFim)) return p1->id > p2->id;
+        return dataMenor(p2->dataFim, p1->dataFim);
     }
 }
 
@@ -154,7 +119,7 @@ void atualizaAtePaciente(Paciente *p, Data horarioAtual) {
     float tempo = subtraiData(horarioAtual, p->dataInicio);
     p->tempoAtendido += tempo;
 
-    printf("ATE %.0f %d %.2f ", p->id, p->estado, tempo);
+    printf("ATE %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
     imprimeData(horarioAtual);
     imprimeData(p->dataFim);
     printf("\n");
@@ -185,7 +150,7 @@ void atualizaOciPaciente(Paciente *p, Data horarioAtual) {
     float tempo = subtraiData(horarioAtual, p->dataFim);
     p->tempoOcioso += tempo;
 
-    printf("OCI %.0f %d %.2f ", p->id, p->estado, tempo);
+    printf("OCI %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
     imprimeData(p->dataFim);
     imprimeData(horarioAtual);
     printf("\n");

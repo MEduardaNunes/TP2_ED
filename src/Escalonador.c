@@ -107,7 +107,7 @@ void insereEvento(Escalonador *e, Paciente *p) {
     int j = getAncestral(i);
     Paciente *paciente_aux;
 
-    while (i > 0 && comparaPacientes(e->pacientes[i], e->pacientes[j], "<")) {
+    while (comparaPacientes(e->pacientes[i], e->pacientes[j], "<")) {
         paciente_aux = e->pacientes[i];
         e->pacientes[i] = e->pacientes[j];
         e->pacientes[j] = paciente_aux;

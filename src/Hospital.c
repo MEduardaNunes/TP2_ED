@@ -277,7 +277,7 @@ void verificaProcedimento(int id, Hospital *hospital) {
     }
 
     Paciente *paciente;
-    if ((!filaVazia(&hospital->filas[id][VERD]) || !filaVazia(&hospital->filas[id][AMAR]) ||
+    while ((!filaVazia(&hospital->filas[id][VERD]) || !filaVazia(&hospital->filas[id][AMAR]) ||
     !filaVazia(&hospital->filas[id][VERM])) && !procedimentoOcupado(hospital->procedimentos[id])) {
         //removendo paciente de acordo com a prioridade
         if (!filaVazia(&hospital->filas[id][VERM])) paciente = desinfileira(&hospital->filas[id][VERM]);
@@ -332,6 +332,8 @@ void simulaHospital(Hospital *hospital) {
         //movendo para atendimento e atualizando estatísticas
         mudaEstado(paciente, hospital);
         if (paciente->estado != 14) moveParaFila(paciente, hospital);
+        if (!escalonadorVazio(&hospital->escalonadorHospital) && paciente->estado != 3)
+            if(dataIgual(hospital->relogioHospital, hospital->escalonadorHospital.pacientes[0]->dataFim)) continue;
         moveParaAtendimento(hospital);
         atualizaEstHospital(hospital);
         printf("\n");
