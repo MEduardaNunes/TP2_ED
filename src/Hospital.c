@@ -77,8 +77,6 @@ Hospital* preencheHospital(char *nomeArq) {
     }
 
     //inicializar filas
-    hospital->filas = (Fila **) malloc(sizeof(Fila*) * QPROC);
-    erroAssert(hospital->filas, "Memoria insuficiente");
     hospital->filas = inicializaFilas(qntdPacientes);
 
     //inicializa escalonador
