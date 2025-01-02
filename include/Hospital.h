@@ -16,10 +16,11 @@
  * - Os pacientes lidos do arquivo
  * - As filas de cada procedimento e de cada urgência,
  * ou seja, cada índice da fila corresponde à urgência,
- * sendo 0 - Verde, 1 - Amarelo e 2 - Vermelho
+ * sendo 0 - Verde, 1 - Amarelo e 2 - Vermelho. Apenas a
+ * fila da triagem é única.
  * - Os procedimentos do hospital: triagem, atendimento,
  * testes de laboratório, exames de imagem e instrumentos/
- * medicamentos.
+ * medicamentos (índices 0 a 5, respectivamente).
  * - O escalonador do hospital, que controla a simulação.
 */
 typedef struct {

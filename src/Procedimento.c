@@ -70,8 +70,8 @@ int achaUnidadeVazia(Procedimento *p) {
  * \brief Verifica se um Procedimento está ocupado
  *
  * Essa função faz uma busca sequencial nas unidades do Procedimento
- * e retorna se todas as unidades estão ocupadas. Caso esteja, retorna
- * 1, e 0 caso contrário.
+ * e retorna se todas as unidades estão ocupadas. Caso todas estejam
+ * ocupadas, retorna 1, e 0 caso contrário.
  * 
  * \param p O procedimento a ser verificado.
  * \return 0 ou 1.
@@ -87,7 +87,7 @@ int procedimentoOcupado(Procedimento *p) {
 
 
 /*
- * \brief Ocupa uma Unidadede um Procedimento
+ * \brief Ocupa uma Unidade de um Procedimento
  *
  * Essa função recebe um Procedimento, um id de uma Unidade e uma Data,
  * então é ocupada a Unidade do id recebido do Procedimento e atualizado
@@ -111,13 +111,13 @@ void ocupaUnidade(Procedimento *p, int unidade, Data horario) {
 
 
 /*
- * \brief Atualiza as estatísticas de um Procedimento
+ * \brief Atualiza as estatísticas dos Procedimentos
  *
- * Essa função recebe um Procedimento e uma data e percorre
+ * Essa função recebe os Procedimentos e uma data e percorre
  * sequencialmente as Unidades, atualizando o tempo de atendimento
  * ou ocioso, caso esteja ocupado ou não, respectivamente.
  * 
- * \param p O procedimento a ser atualizado.
+ * \param p Os procedimentos a serem atualizados.
  * \param horarioAtual A Data da atualização.
  */
 void atualizaEstProcedimentos(Procedimento **p, Data horarioAtual) {
@@ -136,12 +136,12 @@ void atualizaEstProcedimentos(Procedimento **p, Data horarioAtual) {
 
 
 /*
- * \brief Finalina um Procedimento
+ * \brief Finalina os Procedimentos
  *
- * Essa função recebe um Procedimento e desaloca as 
- * memórias alocadas dinamicamente dessa estrutura.
+ * Essa função recebe os Procedimentos e desaloca as 
+ * memórias alocadas dinamicamente dessas estruturas.
  * 
- * \param p O Procedimento a ser finalizado.
+ * \param p Os Procedimentos a serem finalizados.
  */
 void finalizaProcedimentos(Procedimento **p) {
     if (!p) {

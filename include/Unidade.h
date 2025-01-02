@@ -9,7 +9,7 @@
  *
  * Armazena as informações de uma unidade de um Procedimento,
  * sendo elas se a unidade está ocupada, os períodos de aten-
- * dimento da unidade e o último período do relógio do hospital.
+ * dimento da unidade e a última data de atualização da unidade.
 */
 typedef struct {
     int ocupado;

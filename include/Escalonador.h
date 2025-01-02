@@ -7,8 +7,9 @@
 /*
  * Estrutura de um Escalonador
  *
- * Armazena a raiz do minHeap, utilizado
- * para simular a fila de prioridade.
+ * Simula um minHeap em um vetor e 
+ * armazena a quantidade de pacientes, 
+ * os pacientes e o tamanho máximo.
 */
 typedef struct {
     int qntd;

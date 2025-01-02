@@ -174,6 +174,7 @@ Paciente* retiraProximoEvento(Escalonador *e) {
  * e retorna 0 caso tenha, ou 1 caso não tenha.
  * 
  * \param e Um Escalonador a ser verificado se está vazio.
+ * \return 0 ou 1 (não vazio ou vazio).
 */
 int escalonadorVazio(Escalonador *e) {
     if (!e) {

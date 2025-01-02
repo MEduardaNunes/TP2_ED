@@ -25,7 +25,7 @@
  * \brief Construtor de Paciente
  *
  * Inicializa um novo Paciente com as informações lidas no arquivo
- * de entrada, além de iniciliazar o estado.
+ * de entrada, além de iniciliazar o estado, as datas e o idUnidade.
  * 
  * \param id O identificador do paciente.
  * \param alta Se o paciente teve alta ou não após atendimento (0 ou 1).
@@ -102,9 +102,8 @@ int comparaPacientes(Paciente *p1, Paciente *p2, char *op) {
  * \brief Atualiza o tempo atendido de um Paciente
  *
  * Essa função recebe um Paciente e uma data, e 
- * atualiza seu tempo atendido, bem como o periodoAtual.
- * Como ele está em um atendimento, apenas a data de 
- * início do periodo pe atualiza para a data recebida.
+ * atualiza seu tempo atendido, bem como a data de 
+ * início para o horário atual.
  * 
  * \param p O Paciente a ser atualizado.
  * \param horarioAtual A data do horário da atualização.
@@ -133,9 +132,8 @@ void atualizaAtePaciente(Paciente *p, Data horarioAtual) {
  * \brief Atualiza o tempo ocioso de um Paciente
  *
  * Essa função recebe um Paciente e uma data, e 
- * atualiza seu tempo ocioso, bem como o periodoAtual.
- * Como ele está em uma fila, ambas datas do periodo
- * são atualizadas para a data recebida.
+ * atualiza seu tempo ocioso, bem como a data de 
+ * fim para o horário atual.
  * 
  * \param p O Paciente a ser atualizado.
  * \param horarioAtual A data do horário da atualização.

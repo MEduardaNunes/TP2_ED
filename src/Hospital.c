@@ -8,10 +8,20 @@
 
 /*
  * Variáveis globais para melhoria da legibilidade do código. Elas são:
+ * As utilizadas para acessar os índices do atributo 'filas' do Hospital:
  * VERD - Verde (urgência 0)
  * AMAR - Amarelo (urgência 1)
  * VERM - Vermelho (urgência 2)
- * Utilizadas para acessar os índices do atributo 'filas' do Hospital.
+ * TRIA - Fila da triagem (índice 0)
+ * ATEN - Fila de atendimento (índice 1)
+ * MEDH - Fila de medidas hospitalares (índice 2)
+ * TESL - Fila de testes de laboratório (índice 3)
+ * EXAI - Fila de exames de imagem (índice 4)
+ * INME - Fila de instrumentos/medicamentos (índice 5)
+ * 
+ * As utilizadas para padronizar o número de procedimentos e de filas:
+ * QPROC - Quantidade de procedimentos (6)
+ * QFILA - Quantidade de filas padrão (3, uma para cada urgência)
  */
 #define VERD 0
 #define AMAR 1
@@ -28,7 +38,7 @@
 #define QFILA 3
 
 
-/*    t
+/*
  * \brief Preenche um Hospital
  *
  * Essa função recebe um nome do arquivo e preenche um novo
@@ -96,8 +106,9 @@ Hospital* preencheHospital(char *nomeArq) {
  * Essa função recebe um Hospital e um paciente, e retorna o Procedimento 
  * que ele acabou de entrar ou de sair.
  * 
- * \param paciente O Paciente que será achado o Procedimento.
+ * \param p O Paciente que será achado o Procedimento.
  * \param hospital O hospital em que se encontra o paciente.
+ * \return O Procedimento encontrado.
 */
 Procedimento* determinaProcedimento(Paciente *p, Hospital *hospital) {
     if (!p || !hospital) {
@@ -122,8 +133,9 @@ Procedimento* determinaProcedimento(Paciente *p, Hospital *hospital) {
  * Essa função recebe um Hospital e um paciente, e calcula o 
  * tempo que o Paciente ficará no procedimento que ele está.
  * 
- * \param paciente O Paciente que será calculado o tempo de atendimento.
+ * \param p O Paciente que será calculado o tempo de atendimento.
  * \param hospital O hospital em que se encontra o paciente.
+ * \return O tempo de atendimento do Paciente.
 */
 float tempoTotalAtendimento(Paciente *p, Hospital *hospital) {
     if (!p || !hospital) {
@@ -156,10 +168,10 @@ float tempoTotalAtendimento(Paciente *p, Hospital *hospital) {
  *
  * Essa função recebe um Hospital e um paciente, e muda o
  * paciente para o próximo estado, além de atualizar as 
- * datas do atributo 'periodoAtual'. Também atualiza os 
- * dados da unidade a ser ocupada ou desocupada.
+ * datas do Paciente. Também atualiza os dados da unidade
+ * a ser ocupada ou desocupada.
  * 
- * \param paciente O paciente a ser mudado de estado.
+ * \param p O paciente a ser mudado de estado.
  * \param hospital O hospital em que se encontra o paciente.
 */
 void mudaEstado(Paciente *p, Hospital *hospital) {
@@ -216,7 +228,7 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
  * Essa função recebe um Hospital e um paciente, e o enfileira
  * na fila adequada, de acordo com seu estado.
  * 
- * \param paciente O Paciente que será enfileirado.
+ * \param p O Paciente que será enfileirado.
  * \param hospital O hospital em que se encontra o paciente.
 */
 void moveParaFila(Paciente *p, Hospital *hospital) {
@@ -260,7 +272,8 @@ void moveParaAtendimento(Hospital *hospital) {
  *
  * Essa função recebe um id e um Hospital, e verifica se tem pacientes
  * na fila de espera do Procedimento e se ele está desocupado. Caso 
- * isso seja verdade, esse paciente é movido para o Procedimento.
+ * isso seja verdade, esse paciente é movido para o Procedimento, seguindo
+ * a ordem de prioridade.
  * 
  * \param id O id do Procedimento a ser verificado.
  * \param hospital O hospital em que se encontra o Procedimento.

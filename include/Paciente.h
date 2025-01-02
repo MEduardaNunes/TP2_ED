@@ -13,9 +13,8 @@
  * a quantidade de medidas hospitalares, de testes de laboratório,
  * de exames de imagem e de instrumentos/medicamentos, o estado
  * do Paciente, o id da unidade que o Paciente está sendo atendido,
- * o período atual (armazena o tempo final do atendimento e o último
- * horário do relógio do hospital) e os horários de tempo em que o 
- * Paciente esteve ocioso e em atendimento.
+ * dataInicio, dataFim e os horários de tempo em que o Paciente
+ * esteve ocioso e em atendimento.
 */
 typedef struct {
     //prontuario do paciente

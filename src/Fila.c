@@ -12,9 +12,11 @@
 /*
  * \brief Construtor de Fila
  *
- * Inicializa uma nova Fila, com três filas (verde, amarela
- * e vermelha), de tamanho máximo recebido como parâmetro,
- * que é o número de pacientes lidos.
+ * Inicializa as filas de cada procedimento, com três filas
+ * (verde, amarela e vermelha), de tamanho máximo recebido
+ * como parâmetro, que é o número de pacientes lidos.
+ * OBS.: a primeira fila correspondente à triagem tem apenas
+ * uma fila (ainda não se sabe a prioridade do paciente).
  * 
  * \param tamMax Tamanho máximo da fila.
  */
@@ -110,7 +112,16 @@ int filaVazia(Fila *f) {
 }
 
 
-
+/*
+ * \brief Atualiza as estatísticas dos pacientes nas filas
+ *
+ * Essa função recebe Filas e um horário, e atualiza as estatíticas
+ * de tempo ocioso de cada paciente que esteja em uma fila, de acordo
+ * com o horário recebido.
+ * 
+ * \param f O ponteiro para as Filas.
+ * \param horario A data da atualização.
+ */
 void atualizaEstFilas(Fila **f, Data horario) {
     if (!f) {
         avisoAssert(f, "Fila invalida.");
