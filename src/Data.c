@@ -213,9 +213,16 @@ void imprimeData(Data d) {
     float seg = min - (float) min_int;
     seg *= 60;
 
-    if (seg >= 59.5 && seg <= 60.5) {
+    int qntd_min;
+
+    if (seg >= 59.5 && seg < 60) {
         seg = 0.0;
         min_int++;
+
+    } else if (seg >= 60) {
+        qntd_min = (int) seg / 60;
+        seg = seg - qntd_min * 60;
+        min += qntd_min;
     }
 
     //determinando dia da semana por meio do algoritmo de Zeller
