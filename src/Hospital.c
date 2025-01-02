@@ -79,10 +79,8 @@ Hospital* preencheHospital(char *nomeArq) {
     //inicializar filas
     hospital->filas = (Fila **) malloc(sizeof(Fila*) * QPROC);
     erroAssert(hospital->filas, "Memoria insuficiente");
-    for (int i = 0; i < QPROC; i++) {
-        hospital->filas[i] = inicializaFila(qntdPacientes);
-    }
-    
+    hospital->filas = inicializaFilas(qntdPacientes);
+
     //inicializa escalonador
     hospital->escalonadorHospital = inicializaEscalonador(qntdPacientes);
 
@@ -230,7 +228,7 @@ void moveParaFila(Paciente *p, Hospital *hospital) {
         return;
     }
 
-    if (p->estado == 2) enfileira(&hospital->filas[TRIA][p->grauUrgencia], p);
+    if (p->estado == 2) enfileira(hospital->filas[TRIA], p);
     else if (p->estado == 4) enfileira(&hospital->filas[ATEN][p->grauUrgencia], p);
     else if (p->estado == 6) enfileira(&hospital->filas[MEDH][p->grauUrgencia], p);
     else if (p->estado == 8) enfileira(&hospital->filas[TESL][p->grauUrgencia], p);
@@ -277,21 +275,31 @@ void verificaProcedimento(int id, Hospital *hospital) {
     }
 
     Paciente *paciente;
-    while ((!filaVazia(&hospital->filas[id][VERD]) || !filaVazia(&hospital->filas[id][AMAR]) ||
-    !filaVazia(&hospital->filas[id][VERM])) && !procedimentoOcupado(hospital->procedimentos[id])) {
-        //removendo paciente de acordo com a prioridade
-        if (!filaVazia(&hospital->filas[id][VERM])) paciente = desinfileira(&hospital->filas[id][VERM]);
-        else if (!filaVazia(&hospital->filas[id][AMAR])) paciente = desinfileira(&hospital->filas[id][AMAR]);
-        else if (!filaVazia(&hospital->filas[id][VERD])) paciente = desinfileira(&hospital->filas[id][VERD]);
 
-        if (!paciente) {
-            avisoAssert(paciente, "Paciente nulo.");
-            return;
+    if (id == TRIA) {
+        while (!filaVazia(hospital->filas[TRIA]) && !procedimentoOcupado(hospital->procedimentos[TRIA])) {
+            paciente = desinfileira(hospital->filas[TRIA]);
+            mudaEstado(paciente, hospital);
+            insereEvento(&hospital->escalonadorHospital, paciente);
         }
 
-        //inserindo evento no escalonador
-        mudaEstado(paciente, hospital);
-        insereEvento(&hospital->escalonadorHospital, paciente);
+    } else {
+        while ((!filaVazia(&hospital->filas[id][VERD]) || !filaVazia(&hospital->filas[id][AMAR]) ||
+        !filaVazia(&hospital->filas[id][VERM])) && !procedimentoOcupado(hospital->procedimentos[id])) {
+            //removendo paciente de acordo com a prioridade
+            if (!filaVazia(&hospital->filas[id][VERM])) paciente = desinfileira(&hospital->filas[id][VERM]);
+            else if (!filaVazia(&hospital->filas[id][AMAR])) paciente = desinfileira(&hospital->filas[id][AMAR]);
+            else if (!filaVazia(&hospital->filas[id][VERD])) paciente = desinfileira(&hospital->filas[id][VERD]);
+
+            if (!paciente) {
+                avisoAssert(paciente, "Paciente nulo.");
+                return;
+            }
+
+            //inserindo evento no escalonador
+            mudaEstado(paciente, hospital);
+            insereEvento(&hospital->escalonadorHospital, paciente);
+        }
     }
 }
 
@@ -332,7 +340,7 @@ void simulaHospital(Hospital *hospital) {
         //movendo para atendimento e atualizando estatísticas
         mudaEstado(paciente, hospital);
         if (paciente->estado != 14) moveParaFila(paciente, hospital);
-        if (!escalonadorVazio(&hospital->escalonadorHospital) && paciente->estado != 3)
+        if (!escalonadorVazio(&hospital->escalonadorHospital))
             if(dataIgual(hospital->relogioHospital, hospital->escalonadorHospital.pacientes[0]->dataFim)) continue;
         moveParaAtendimento(hospital);
         atualizaEstHospital(hospital);
@@ -403,7 +411,7 @@ void finalizaHospital(Hospital *hospital) {
     for (int i = 0; i < hospital->qntdPacientes; i++)
         free(hospital->pacientesHospital[i]);
     free(hospital->pacientesHospital);
-    finalizaFila(hospital->filas);
+    finalizaFilas(hospital->filas);
     finalizaProcedimentos(hospital->procedimentos);
     finalizaEscalonador(&hospital->escalonadorHospital);
     free(hospital);

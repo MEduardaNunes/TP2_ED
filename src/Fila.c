@@ -18,20 +18,26 @@
  * 
  * \param tamMax Tamanho máximo da fila.
  */
-Fila* inicializaFila(int qntdMax) {
+Fila** inicializaFilas(int qntdMax) {
     erroAssert(qntdMax > 0, "Tamanho invalido.");
 
-    Fila* nova_fila = (Fila*) malloc(sizeof(Fila) * QFILA);
+    Fila** nova_fila = (Fila**) malloc(sizeof(Fila*) * QPROC);
     erroAssert(nova_fila, "Memoria insuficiente.");
 
-    for (int i = 0; i < QFILA; i++) {
-        nova_fila[i].frente = 0;
-        nova_fila[i].tras = 0;
-        nova_fila[i].qntd = 0;
-        nova_fila[i].tamMax = qntdMax;
-        nova_fila[i].pacientes = (Paciente**) malloc(sizeof(Paciente*) * qntdMax);
-        erroAssert(nova_fila[i].pacientes, "Memoria insuficiente");
-        for (int j = 0; j < qntdMax; j++) nova_fila[i].pacientes[j] = NULL;
+    for (int i = 0; i < QPROC; i++) {
+        int qntd_fila = (i == 0 ? 1 : QFILA);
+        nova_fila[i] = (Fila*) malloc(sizeof(Fila) * qntd_fila);
+        erroAssert(nova_fila[i], "Memoria insuficiente.");
+
+        for (int j = 0; j < qntd_fila; j++) {
+            nova_fila[i][j].frente = 0;
+            nova_fila[i][j].tras = 0;
+            nova_fila[i][j].qntd = 0;
+            nova_fila[i][j].tamMax = qntdMax;
+            nova_fila[i][j].pacientes = (Paciente**) malloc(sizeof(Paciente*) * qntdMax);
+            erroAssert(nova_fila[i][j].pacientes, "Memoria insuficiente");
+            for (int k = 0; k < qntdMax; k++) nova_fila[i][j].pacientes[k] = NULL;
+        }
     }
 
     return nova_fila;
@@ -112,7 +118,8 @@ void atualizaEstFilas(Fila **f, Data horario) {
     }
 
     for (int i = 0; i < QPROC; i++) {
-        for (int j = 0; j < QFILA; j++) {
+        int qntd_fila = (i == 0  ? 1 : QFILA);
+        for (int j = 0; j < qntd_fila; j++) {
             for (int k = f[i][j].frente; k != f[i][j].tras; k = (k + 1) % f[i][j].tamMax) {
                 atualizaOciPaciente(f[i][j].pacientes[k], horario);
             }    
@@ -130,14 +137,15 @@ void atualizaEstFilas(Fila **f, Data horario) {
  * 
  * \param f Uma Fila a ser finalizada.
  */
-void finalizaFila(Fila **f) {
+void finalizaFilas(Fila **f) {
     if (!f) {
         avisoAssert(f, "Fila nula.");
         return;
     }
 
     for (int i = 0; i < QPROC; i++) {
-        for (int j = 0; j < QFILA; j++) {
+        int qntd_fila = (i == 0  ? 1 : QFILA);
+        for (int j = 0; j < qntd_fila; j++) {
             free(f[i][j].pacientes);
         }
         free(f[i]);
