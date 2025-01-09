@@ -118,10 +118,10 @@ void atualizaAtePaciente(Paciente *p, Data horarioAtual) {
     float tempo = subtraiData(horarioAtual, p->dataInicio);
     p->tempoAtendido += tempo;
 
-    printf("ATE %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
-    imprimeData(horarioAtual);
-    imprimeData(p->dataFim);
-    printf("\n");
+    //printf("ATE %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
+    //imprimeData(horarioAtual);
+    //imprimeData(p->dataFim);
+    //printf("\n");
 
     //atualizando data
     copiaData(&p->dataInicio, horarioAtual);
@@ -148,10 +148,10 @@ void atualizaOciPaciente(Paciente *p, Data horarioAtual) {
     float tempo = subtraiData(horarioAtual, p->dataFim);
     p->tempoOcioso += tempo;
 
-    printf("OCI %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
-    imprimeData(p->dataFim);
-    imprimeData(horarioAtual);
-    printf("\n");
+    //printf("OCI %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
+    //imprimeData(p->dataFim);
+    //imprimeData(horarioAtual);
+    //printf("\n");
 
     //atualizando data
     copiaData(&p->dataFim, horarioAtual);

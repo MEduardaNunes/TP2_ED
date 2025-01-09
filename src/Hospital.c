@@ -192,7 +192,7 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
         if (p->idUnidade != -1) {
             atualizaAteUnidade(&proc->unidades[p->idUnidade], hospital->relogioHospital);
             proc->unidades[p->idUnidade].ocupado = 0;
-            printf("DESOC %d ", p->idUnidade);
+            //printf("DESOC %d ", p->idUnidade);
             p->idUnidade = -1;
         }
 
@@ -213,7 +213,7 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
         ocupaUnidade(proc, unidade, hospital->relogioHospital);
         
         //atualizando estatisticas do paciente
-        printf("OCUPA %d ", unidade);
+        //printf("OCUPA %d ", unidade);
         atualizaOciPaciente(p, hospital->relogioHospital);
         Data data_final = somaData(hospital->relogioHospital, tempoTotalAtendimento(p, hospital));
         copiaData(&p->dataInicio, hospital->relogioHospital);
@@ -355,7 +355,7 @@ void simulaHospital(Hospital *hospital) {
             if(dataIgual(hospital->relogioHospital, hospital->escalonadorHospital.pacientes[0]->dataFim)) continue;
         moveParaAtendimento(hospital);
         atualizaEstHospital(hospital);
-        printf("\n");
+        //printf("\n");
     }
 }
 
