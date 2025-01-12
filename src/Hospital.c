@@ -92,9 +92,6 @@ Hospital* preencheHospital(char *nomeArq) {
     //inicializa escalonador
     hospital->escalonadorHospital = inicializaEscalonador(qntdPacientes);
 
-    //inicializa data
-    hospital->relogioHospital = inicializaData(0, 0, 0, 0);
-
     fclose(arquivoEntrada);
     return hospital;
 }
@@ -128,42 +125,6 @@ Procedimento* determinaProcedimento(Paciente *p, Hospital *hospital) {
 
 
 /*
- * \brief Calcula tempo total de atendimento
- *
- * Essa função recebe um Hospital e um paciente, e calcula o 
- * tempo que o Paciente ficará no procedimento que ele está.
- * 
- * \param p O Paciente que será calculado o tempo de atendimento.
- * \param hospital O hospital em que se encontra o paciente.
- * \return O tempo de atendimento do Paciente.
-*/
-float tempoTotalAtendimento(Paciente *p, Hospital *hospital) {
-    if (!p || !hospital) {
-        avisoAssert(p, "Paciente nulo.");
-        avisoAssert(hospital, "Hospital nulo.");
-        return 0.0;
-    }
-
-    Procedimento *proc = determinaProcedimento(p, hospital);
-    if (!proc) {
-        avisoAssert(proc, "Procedimento nulo.");
-        return 0.0;
-    }
-
-    float qntd = 0.0, tempo_total;
-
-    if (p->estado == 3 || p->estado == 5) qntd = 1.0;
-    else {
-        int i = (p->estado - 7) / 2;
-        qntd = (float) p->quantidades[i];
-    }
-    tempo_total = qntd * proc->tempo;
-
-    return tempo_total;
-}
-
-
-/*
  * \brief Muda o estado de um Paciente
  *
  * Essa função recebe um Hospital e um paciente, e muda o
@@ -184,24 +145,31 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
 
     //mudando estado e achando o procedimento
     p->estado++;
-    if(p->estado == 2) return;
+    if (p->estado == 2) return;
 
     Procedimento* proc = determinaProcedimento(p, hospital);
+    int qntd_proc = 0;
+    if (p->estado == 3 || p->estado == 5) qntd_proc = 1;
+    else if (p->estado == 7) qntd_proc = p->quantidades[MEDH];
+    else if (p->estado == 9) qntd_proc = p->quantidades[TESL];
+    else if (p->estado == 11) qntd_proc = p->quantidades[EXAI];
+    else if (p->estado == 13) qntd_proc = p->quantidades[INME];
+
     if (p->estado % 2 == 0) {
         //desocupando unidade
         if (p->idUnidade != -1) {
-            atualizaAteUnidade(&proc->unidades[p->idUnidade], hospital->relogioHospital);
-            proc->unidades[p->idUnidade].ocupado = 0;
+            proc->unidades[p->idUnidade] = 0;
             //printf("DESOC %d ", p->idUnidade);
             p->idUnidade = -1;
         }
 
         //atualizando estatisticas do paciente
-        atualizaAtePaciente(p, hospital->relogioHospital);
         if (p->estado == 6 && p->alta) p->estado = 14;
-        copiaData(&p->dataFim, hospital->relogioHospital);
 
     } else {
+        //atualizando tempo ocioso
+        p->tempoOcioso += (difftime(hospital->relogioHospital, p->dataFim) / 3600);
+
         //ocupando unidade vazia
         int unidade = achaUnidadeVazia(proc);
         if (unidade == -1) {
@@ -210,14 +178,13 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
         }
 
         p->idUnidade = unidade;
-        ocupaUnidade(proc, unidade, hospital->relogioHospital);
+        proc->unidades[unidade] = 1;
         
-        //atualizando estatisticas do paciente
+        //atualizando tempo atendido
         //printf("OCUPA %d ", unidade);
-        atualizaOciPaciente(p, hospital->relogioHospital);
-        Data data_final = somaData(hospital->relogioHospital, tempoTotalAtendimento(p, hospital));
-        copiaData(&p->dataInicio, hospital->relogioHospital);
-        copiaData(&p->dataFim, data_final);
+        p->tempoAtendido += proc->tempo * qntd_proc;
+        double segs_totais = (proc->tempo * qntd_proc) * 3600;
+        p->dataFim += segs_totais;
     }   
 }
 
@@ -345,42 +312,17 @@ void simulaHospital(Hospital *hospital) {
         }
 
         //atualizando horario do relogio do hospital
-        copiaData(&hospital->relogioHospital, paciente->dataFim);
+        hospital->relogioHospital = paciente->dataFim;
 
         //mudando estado do paciente, enfileirando
         //movendo para atendimento e atualizando estatísticas
         mudaEstado(paciente, hospital);
         if (paciente->estado != 14) moveParaFila(paciente, hospital);
         if (!escalonadorVazio(&hospital->escalonadorHospital))
-            if(dataIgual(hospital->relogioHospital, hospital->escalonadorHospital.pacientes[0]->dataFim)) continue;
+            if(hospital->relogioHospital == hospital->escalonadorHospital.pacientes[0]->dataFim) continue;
         moveParaAtendimento(hospital);
-        atualizaEstHospital(hospital);
         //printf("\n");
     }
-}
-
-
-/*
- * \brief Atualiza as estatísticas do Hospital
- *
- * Essa função recebe um Hospital e atualiza os tempos ociosos
- * e de atendimento de todos Pacientes do hospital e de todas
- * Unidades dos Procedimentos do hospital.
- * 
- * \param hospital O Hospital a ser atualizado.
-*/
-void atualizaEstHospital(Hospital *hospital) {
-    if (!hospital) {
-        avisoAssert(hospital, "Hospital nulo.");
-        return;
-    }
-
-    //atualizar pacientes
-    atualizaEstEscalonador(&hospital->escalonadorHospital, hospital->relogioHospital);
-    atualizaEstFilas(hospital->filas, hospital->relogioHospital);
-
-    //atualizar unidades
-    atualizaEstProcedimentos(hospital->procedimentos, hospital->relogioHospital);
 }
 
 

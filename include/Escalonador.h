@@ -1,7 +1,6 @@
 #ifndef ESCALONADOR_H
 #define ESCALONADOR_H
 
-#include "Data.h"
 #include "Paciente.h"
 
 /*
@@ -25,7 +24,6 @@ int getSucessorDir(int posicao);
 void insereEvento(Escalonador *e, Paciente *p);
 Paciente* retiraProximoEvento(Escalonador *e);
 int escalonadorVazio(Escalonador *e);
-void atualizaEstEscalonador(Escalonador *e, Data horario);
 void finalizaEscalonador(Escalonador *e);
 
 

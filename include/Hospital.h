@@ -1,11 +1,12 @@
 #ifndef HOSPITAL_H
 #define HOSPITAL_H
 
-#include "Data.h"
 #include "Escalonador.h"
 #include "Fila.h"
 #include "Paciente.h"
 #include "Procedimento.h"
+
+#include <time.h>
 
 
 /*
@@ -25,7 +26,7 @@
 */
 typedef struct {
     //relogio global
-    Data relogioHospital;
+    time_t relogioHospital;
 
     //pacientes lidos
     int qntdPacientes;
@@ -40,13 +41,11 @@ typedef struct {
 
 Hospital* preencheHospital(char *nomeArq);
 Procedimento* determinaProcedimento(Paciente *p, Hospital *hospital);
-float tempoTotalAtendimento(Paciente *p, Hospital *hospital);
 void mudaEstado(Paciente *p, Hospital *hospital);
 void moveParaFila(Paciente *p, Hospital *hospital);
 void moveParaAtendimento(Hospital *hospital);
 void verificaProcedimento(int id, Hospital *hospital);
 void simulaHospital(Hospital *hospital);
-void atualizaEstHospital(Hospital *hospital);
 void imprimeHospital(Hospital *hospital);
 void finalizaHospital(Hospital *hospital);
 

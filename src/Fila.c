@@ -113,34 +113,6 @@ int filaVazia(Fila *f) {
 
 
 /*
- * \brief Atualiza as estatísticas dos pacientes nas filas
- *
- * Essa função recebe Filas e um horário, e atualiza as estatíticas
- * de tempo ocioso de cada paciente que esteja em uma fila, de acordo
- * com o horário recebido.
- * 
- * \param f O ponteiro para as Filas.
- * \param horario A data da atualização.
- */
-void atualizaEstFilas(Fila **f, Data horario) {
-    if (!f) {
-        avisoAssert(f, "Fila invalida.");
-        return;
-    }
-
-    for (int i = 0; i < QPROC; i++) {
-        int qntd_fila = (i == 0  ? 1 : QFILA);
-        for (int j = 0; j < qntd_fila; j++) {
-            for (int k = f[i][j].frente; k != f[i][j].tras; k = (k + 1) % f[i][j].tamMax) {
-                atualizaOciPaciente(f[i][j].pacientes[k], horario);
-            }    
-        }
-    }
-        
-}
-
-
-/*
  * \brief Finaliza uma Fila
  *
  * Essa função recebe uma Fila e a finaliza, desalocando

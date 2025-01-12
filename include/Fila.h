@@ -23,7 +23,6 @@ Fila** inicializaFilas(int qntdMax);
 void enfileira(Fila *f, Paciente *p);
 Paciente* desinfileira(Fila *f);
 int filaVazia(Fila *f);
-void atualizaEstFilas(Fila **f, Data horario);
 void finalizaFilas(Fila **f);
 
 #endif

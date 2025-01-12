@@ -1,5 +1,4 @@
 #include "../include/Paciente.h"
-#include "../include/Data.h"
 #include "../include/msgassert.h"
 
 #include <stdio.h>
@@ -44,9 +43,22 @@ Paciente* inicializaPaciente(float id, int alta, int ano, int mes, int dia, floa
     Paciente *novo_paciente = (Paciente*) malloc(sizeof(Paciente));
     erroAssert(novo_paciente, "Memoria insuficiente");
 
+    //data para unix
+    int hora_i = (int) hora;
+    int minutos_i = (hora - hora_i) * 60;
+
+    struct tm data = {0};
+    data.tm_year = ano - 1900;
+    data.tm_mon = mes - 1;
+    data.tm_mday = dia;
+    data.tm_hour = hora_i;
+    data.tm_min = minutos_i;
+
+    time_t data_inicial = mktime(&data);
+
     novo_paciente->id = id;
     novo_paciente->alta = alta;
-    novo_paciente->dataAdmissao = inicializaData(ano, mes, dia, hora);
+    novo_paciente->dataAdmissao = data_inicial;
     novo_paciente->grauUrgencia = gu;
     novo_paciente->quantidades[MH] = qMH;
     novo_paciente->quantidades[TL] = qTL;
@@ -55,8 +67,7 @@ Paciente* inicializaPaciente(float id, int alta, int ano, int mes, int dia, floa
 
     novo_paciente->estado = 1;
     novo_paciente->idUnidade = -1;
-    novo_paciente->dataInicio = inicializaData(ano, mes, dia, hora);
-    novo_paciente->dataFim = inicializaData(ano, mes, dia, hora);
+    novo_paciente->dataFim = data_inicial;
     novo_paciente->tempoOcioso = 0.0;
     novo_paciente->tempoAtendido = 0.0;
 
@@ -87,74 +98,14 @@ int comparaPacientes(Paciente *p1, Paciente *p2, char *op) {
     }
 
     if (!strcmp("<", op)) {
-        if (dataIgual (p1->dataFim, p2->dataFim)) return p1->id < p2->id;
-        return dataMenor(p1->dataFim, p2->dataFim);
+        if (p1->dataFim == p2->dataFim) return p1->id < p2->id;
+        return p1->dataFim < p2->dataFim;
     }
     
     if (!strcmp(">", op)) {
-        if (dataIgual(p1->dataFim, p2->dataFim)) return p1->id > p2->id;
-        return dataMenor(p2->dataFim, p1->dataFim);
+        if (p1->dataFim == p2->dataFim) return p1->id > p2->id;
+        return p1->dataFim > p2->dataFim;
     }
-}
-
-
-/*
- * \brief Atualiza o tempo atendido de um Paciente
- *
- * Essa função recebe um Paciente e uma data, e 
- * atualiza seu tempo atendido, bem como a data de 
- * início para o horário atual.
- * 
- * \param p O Paciente a ser atualizado.
- * \param horarioAtual A data do horário da atualização.
-*/
-void atualizaAtePaciente(Paciente *p, Data horarioAtual) {
-    if (!p) {
-        avisoAssert(p, "Paciente nulo.");
-        return;
-    }
-
-    //atualizando tempo
-    float tempo = subtraiData(horarioAtual, p->dataInicio);
-    p->tempoAtendido += tempo;
-
-    //printf("ATE %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
-    //imprimeData(horarioAtual);
-    //imprimeData(p->dataFim);
-    //printf("\n");
-
-    //atualizando data
-    copiaData(&p->dataInicio, horarioAtual);
-}
-
-
-/*
- * \brief Atualiza o tempo ocioso de um Paciente
- *
- * Essa função recebe um Paciente e uma data, e 
- * atualiza seu tempo ocioso, bem como a data de 
- * fim para o horário atual.
- * 
- * \param p O Paciente a ser atualizado.
- * \param horarioAtual A data do horário da atualização.
-*/
-void atualizaOciPaciente(Paciente *p, Data horarioAtual) {
-    if (!p) {
-        avisoAssert(p, "Paciente nulo.");
-        return;
-    }
-
-    //atualizando tempo
-    float tempo = subtraiData(horarioAtual, p->dataFim);
-    p->tempoOcioso += tempo;
-
-    //printf("OCI %.0f %d %d %.2f ", p->id, p->grauUrgencia, p->estado, tempo);
-    //imprimeData(p->dataFim);
-    //imprimeData(horarioAtual);
-    //printf("\n");
-
-    //atualizando data
-    copiaData(&p->dataFim, horarioAtual);
 }
 
 
@@ -172,8 +123,9 @@ void imprimePaciente(Paciente *p) {
         return;
     }
 
-    printf("%.0f ", p->id);
-    imprimeData(p->dataAdmissao);
-    imprimeData(p->dataFim);
-    printf("%.2f %.2f %.2f\n", p->tempoAtendido + p->tempoOcioso, p->tempoAtendido, p->tempoOcioso);
+    char *data_inicio = ctime(&p->dataAdmissao), *data_fim = ctime(&p->dataFim);
+    if (data_inicio[strlen(data_inicio) - 1] == '\n') data_inicio[strlen(data_inicio) - 1] = '\0';
+    if (data_fim[strlen(data_fim) - 1] == '\n') data_fim[strlen(data_fim) - 1] = '\0';
+
+    printf("%.0f %s %s %.2f %.2f %.2f\n", p->id, data_inicio, data_fim, p->tempoAtendido + p->tempoOcioso, p->tempoAtendido, p->tempoOcioso);
 }

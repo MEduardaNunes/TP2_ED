@@ -187,24 +187,6 @@ int escalonadorVazio(Escalonador *e) {
 
 
 /*
- * \brief Atualiza as estatísticas dos Pacientes do Escalonador
- *
- * Essa função recebe um Escalonador e um horário, e atualiza 
- * o tempo de atendimento dos Pacientes do escalonador, caso
- * o paciente já esteja no Hospital.
- * 
- * \param e Um Escalonador a ser atualizado.
- * \param horario O horário da atualização.
-*/
-void atualizaEstEscalonador(Escalonador *e, Data horario) {
-    for (int i = 0; i < e->qntd; i++) {
-        if (e->pacientes[i] == NULL || e->pacientes[i]->estado == 1) continue;
-            atualizaAtePaciente(e->pacientes[i], horario);
-    }
-}
-
-
-/*
  * \brief Finaliza um Escalonador
  *
  * Essa função finaliza o Escalonador, liberando

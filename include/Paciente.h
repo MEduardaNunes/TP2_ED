@@ -1,7 +1,7 @@
 #ifndef PACIENTE_H
 #define PACIENTE_H
 
-#include "Data.h"
+#include <time.h>
 
 
 /*
@@ -20,15 +20,14 @@ typedef struct {
     //prontuario do paciente
     float id;
     int alta;
-    Data dataAdmissao;
+    time_t dataAdmissao;
     int grauUrgencia;
     int quantidades[4];
 
     //estado e estatisticas
     int estado;
     int idUnidade;
-    Data dataInicio;
-    Data dataFim;
+    time_t dataFim;
     float tempoAtendido;
     float tempoOcioso;
 } Paciente;
@@ -36,8 +35,6 @@ typedef struct {
 
 Paciente* inicializaPaciente(float id, int alta, int ano, int mes, int dia, float hora, int gu, int qMH, int qTL, int qEI, int qIM);
 int comparaPacientes(Paciente *p1, Paciente *p2, char *op);
-void atualizaAtePaciente(Paciente *p, Data horarioAtual);
-void atualizaOciPaciente(Paciente *p, Data horarioAtual);
 void imprimePaciente(Paciente *p);
 
 #endif
