@@ -123,9 +123,12 @@ void imprimePaciente(Paciente *p) {
         return;
     }
 
-    char *data_inicio = ctime(&p->dataAdmissao), *data_fim = ctime(&p->dataFim);
+    char *data_inicio = ctime(&p->dataAdmissao);
     if (data_inicio[strlen(data_inicio) - 1] == '\n') data_inicio[strlen(data_inicio) - 1] = '\0';
+    printf("%.0f %s ", p->id, data_inicio);
+
+    char *data_fim = ctime(&p->dataFim);
     if (data_fim[strlen(data_fim) - 1] == '\n') data_fim[strlen(data_fim) - 1] = '\0';
 
-    printf("%.0f %s %s %.2f %.2f %.2f\n", p->id, data_inicio, data_fim, p->tempoAtendido + p->tempoOcioso, p->tempoAtendido, p->tempoOcioso);
+    printf("%s %.2f %.2f %.2f\n", data_fim, p->tempoAtendido + p->tempoOcioso, p->tempoAtendido, p->tempoOcioso);
 }

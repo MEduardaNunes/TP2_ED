@@ -165,6 +165,7 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
 
         //atualizando estatisticas do paciente
         if (p->estado == 6 && p->alta) p->estado = 14;
+        p->dataFim = hospital->relogioHospital;
 
     } else {
         //atualizando tempo ocioso
@@ -182,7 +183,7 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
         
         //atualizando tempo atendido
         //printf("OCUPA %d ", unidade);
-        p->tempoAtendido += proc->tempo * qntd_proc;
+        p->tempoAtendido += (proc->tempo * qntd_proc);
         double segs_totais = (proc->tempo * qntd_proc) * 3600;
         p->dataFim += segs_totais;
     }   
