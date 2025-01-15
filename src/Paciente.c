@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 
 /*
@@ -128,6 +129,14 @@ void imprimePaciente(Paciente *p) {
 
     char *data_fim = ctime(&p->dataFim);
     if (data_fim[strlen(data_fim) - 1] == '\n') data_fim[strlen(data_fim) - 1] = '\0';
+    printf("%s ", data_fim);
 
-    printf("%s %.2f %.2f %.2f\n", data_fim, p->tempoAtendido + p->tempoOcioso, p->tempoAtendido, p->tempoOcioso);
+    if ((p->tempoAtendido + p->tempoOcioso < 10.0)) printf(" ");
+    printf("%.2f ", p->tempoAtendido + p->tempoOcioso);
+
+    if (p->tempoAtendido < 10.0) printf(" ");
+    printf("%.2f ", p->tempoAtendido);
+
+    if (p->tempoOcioso < 10.0) printf(" ");
+    printf("%.2f\n", fabs(p->tempoOcioso));
 }

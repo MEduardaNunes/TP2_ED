@@ -324,6 +324,7 @@ void simulaHospital(Hospital *hospital) {
         double inicio = hospital->pacientesHospital[i]->dataAdmissao;
         double fim = hospital->pacientesHospital[i]->dataFim;
         double atendido = (double) hospital->pacientesHospital[i]->tempoAtendido;
+
         hospital->pacientesHospital[i]->tempoOcioso = (float) (((fim - inicio) / 3600.0) - atendido);
     }
 }
