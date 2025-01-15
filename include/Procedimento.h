@@ -11,12 +11,11 @@
 typedef struct {
     float tempo;
     int qntdAtendentes;
-    int *unidades;
+    int unidadesOcupadas;
 } Procedimento;
 
 
 Procedimento* inicializaProcedimento(float tempo, int qA);
-int achaUnidadeVazia(Procedimento *p);
 int procedimentoOcupado(Procedimento *p);
 void finalizaProcedimentos(Procedimento **p);
 

@@ -66,7 +66,6 @@ Paciente* inicializaPaciente(float id, int alta, int ano, int mes, int dia, floa
     novo_paciente->quantidades[IM] = qIM;
 
     novo_paciente->estado = 1;
-    novo_paciente->idUnidade = -1;
     novo_paciente->dataFim = data_inicial;
     novo_paciente->tempoOcioso = 0.0;
     novo_paciente->tempoAtendido = 0.0;

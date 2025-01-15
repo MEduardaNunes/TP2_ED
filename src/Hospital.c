@@ -84,7 +84,14 @@ Hospital* preencheHospital(char *nomeArq) {
         fscanf(arquivoEntrada, "%f %d %d %d %d %f %d %d %d %d %d", &id, &alta, &ano, &mes, &dia, &hora, &grauUrgencia, &qMH, &qTL, &qEI, &qIM);
         paciente = inicializaPaciente(id, alta, ano, mes, dia, hora, grauUrgencia, qMH, qTL, qEI, qIM);
         hospital->pacientesHospital[i] = paciente;
+
+        for (int j = 0; j < QPROC; j++) {
+            if (j == 0 || j == 1) paciente->tempoAtendido += hospital->procedimentos[j]->tempo;
+            else if (!paciente->alta)
+                paciente->tempoAtendido += (hospital->procedimentos[j]->tempo * paciente->quantidades[j - 2]);
+        }
     }
+
 
     //inicializar filas
     hospital->filas = inicializaFilas(qntdPacientes);
@@ -148,44 +155,28 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
     if (p->estado == 2) return;
 
     Procedimento* proc = determinaProcedimento(p, hospital);
-    int qntd_proc = 0;
-    if (p->estado == 3 || p->estado == 5) qntd_proc = 1;
-    else if (p->estado == 7) qntd_proc = p->quantidades[MEDH];
-    else if (p->estado == 9) qntd_proc = p->quantidades[TESL];
-    else if (p->estado == 11) qntd_proc = p->quantidades[EXAI];
-    else if (p->estado == 13) qntd_proc = p->quantidades[INME];
+    double qntd_proc = 0.0;
+    if (p->estado == 3 || p->estado == 5) qntd_proc = 1.0;
+    else if (p->estado == 7) qntd_proc = (double) p->quantidades[MEDH  - 2];
+    else if (p->estado == 9) qntd_proc = (double) p->quantidades[TESL - 2];
+    else if (p->estado == 11) qntd_proc = (double) p->quantidades[EXAI - 2];
+    else if (p->estado == 13) qntd_proc = (double) p->quantidades[INME - 2];
 
     if (p->estado % 2 == 0) {
         //desocupando unidade
-        if (p->idUnidade != -1) {
-            proc->unidades[p->idUnidade] = 0;
-            //printf("DESOC %d ", p->idUnidade);
-            p->idUnidade = -1;
-        }
+        proc->unidadesOcupadas--;
 
         //atualizando estatisticas do paciente
         if (p->estado == 6 && p->alta) p->estado = 14;
         p->dataFim = hospital->relogioHospital;
 
     } else {
-        //atualizando tempo ocioso
-        p->tempoOcioso += (difftime(hospital->relogioHospital, p->dataFim) / 3600);
-
-        //ocupando unidade vazia
-        int unidade = achaUnidadeVazia(proc);
-        if (unidade == -1) {
-            avisoAssert(unidade != -1, "Procedimento ocupado.");
-            return;
-        }
-
-        p->idUnidade = unidade;
-        proc->unidades[unidade] = 1;
+        //ocupando unidade
+        proc->unidadesOcupadas++;
         
-        //atualizando tempo atendido
-        //printf("OCUPA %d ", unidade);
-        p->tempoAtendido += (proc->tempo * qntd_proc);
-        double segs_totais = (proc->tempo * qntd_proc) * 3600;
-        p->dataFim += segs_totais;
+        //atualizando tempo final
+        double segs_totais = (double) (proc->tempo * qntd_proc * 3600.0);
+        p->dataFim = hospital->relogioHospital + segs_totais;
     }   
 }
 
@@ -256,14 +247,20 @@ void verificaProcedimento(int id, Hospital *hospital) {
     Paciente *paciente;
 
     if (id == TRIA) {
-        while (!filaVazia(hospital->filas[TRIA]) && !procedimentoOcupado(hospital->procedimentos[TRIA])) {
+        if (!filaVazia(hospital->filas[TRIA]) && !procedimentoOcupado(hospital->procedimentos[TRIA])) {
             paciente = desinfileira(hospital->filas[TRIA]);
+
+            if (!paciente) {
+                avisoAssert(paciente, "Paciente nulo.");
+                return;
+            }
+            
             mudaEstado(paciente, hospital);
             insereEvento(&hospital->escalonadorHospital, paciente);
         }
 
     } else {
-        while ((!filaVazia(&hospital->filas[id][VERD]) || !filaVazia(&hospital->filas[id][AMAR]) ||
+        if ((!filaVazia(&hospital->filas[id][VERD]) || !filaVazia(&hospital->filas[id][AMAR]) ||
         !filaVazia(&hospital->filas[id][VERM])) && !procedimentoOcupado(hospital->procedimentos[id])) {
             //removendo paciente de acordo com a prioridade
             if (!filaVazia(&hospital->filas[id][VERM])) paciente = desinfileira(&hospital->filas[id][VERM]);
@@ -319,10 +316,15 @@ void simulaHospital(Hospital *hospital) {
         //movendo para atendimento e atualizando estatísticas
         mudaEstado(paciente, hospital);
         if (paciente->estado != 14) moveParaFila(paciente, hospital);
-        if (!escalonadorVazio(&hospital->escalonadorHospital))
-            if(hospital->relogioHospital == hospital->escalonadorHospital.pacientes[0]->dataFim) continue;
         moveParaAtendimento(hospital);
-        //printf("\n");
+    }
+
+    //atualizando tempo ocioso
+    for (int i = 0; i < hospital->qntdPacientes; i++) {
+        double inicio = hospital->pacientesHospital[i]->dataAdmissao;
+        double fim = hospital->pacientesHospital[i]->dataFim;
+        double atendido = (double) hospital->pacientesHospital[i]->tempoAtendido;
+        hospital->pacientesHospital[i]->tempoOcioso = (float) (((fim - inicio) / 3600.0) - atendido);
     }
 }
 

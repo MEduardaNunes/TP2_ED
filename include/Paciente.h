@@ -26,7 +26,6 @@ typedef struct {
 
     //estado e estatisticas
     int estado;
-    int idUnidade;
     time_t dataFim;
     float tempoAtendido;
     float tempoOcioso;
