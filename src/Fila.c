@@ -19,6 +19,7 @@
  * uma fila (ainda não se sabe a prioridade do paciente).
  * 
  * \param tamMax Tamanho máximo da fila.
+ * \return As filas do hospital.
  */
 Fila** inicializaFilas(int qntdMax) {
     erroAssert(qntdMax > 0, "Tamanho invalido.");

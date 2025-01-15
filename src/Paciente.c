@@ -110,6 +110,20 @@ int comparaPacientes(Paciente *p1, Paciente *p2, char *op) {
 
 
 /*
+ * \brief Arredonda uma data
+ *
+ * Essa função recebe uma estrutura time_t e arredonda
+ * para o minuto mais próximo.
+ * 
+ * \param t O tempo a ser arredondado.
+ * \return O tempo arredondado.
+*/
+time_t arredondaTime(time_t t) {
+    return ((t + 30) / 60) * 60;
+}
+
+
+/*
  * \brief Imprime um Paciente
  *
  * Essa função recebe um Paciente e imprime suas informações
@@ -123,11 +137,14 @@ void imprimePaciente(Paciente *p) {
         return;
     }
 
-    char *data_inicio = ctime(&p->dataAdmissao);
+    time_t inicio = arredondaTime(p->dataAdmissao);
+    time_t fim = arredondaTime(p->dataFim);
+    
+    char *data_inicio = ctime(&inicio);
     if (data_inicio[strlen(data_inicio) - 1] == '\n') data_inicio[strlen(data_inicio) - 1] = '\0';
     printf("%.0f %s ", p->id, data_inicio);
 
-    char *data_fim = ctime(&p->dataFim);
+    char *data_fim = ctime(&fim);
     if (data_fim[strlen(data_fim) - 1] == '\n') data_fim[strlen(data_fim) - 1] = '\0';
     printf("%s ", data_fim);
 
@@ -139,4 +156,25 @@ void imprimePaciente(Paciente *p) {
 
     if (p->tempoOcioso < 10.0) printf(" ");
     printf("%.2f\n", fabs(p->tempoOcioso));
+}
+
+
+/*
+ * \brief Determina a quantidade do procedimento atual de um Paciente
+ *
+ * Essa função recebe um Paciente e retorna a quantidade de procedimentos
+ * que ele fazer, de acordo com seu estado.
+ * 
+ * \param p O Paciente a ser impresso.
+*/
+double determinaQuantidade(Paciente *p) {
+    double qntd_proc = 0.0;
+
+    if (p->estado == 3 || p->estado == 5) qntd_proc = 1.0;
+    else if (p->estado == 7) qntd_proc = (double) p->quantidades[MH];
+    else if (p->estado == 9) qntd_proc = (double) p->quantidades[TL];
+    else if (p->estado == 11) qntd_proc = (double) p->quantidades[EI];
+    else if (p->estado == 13) qntd_proc = (double) p->quantidades[IM];
+
+    return qntd_proc;
 }

@@ -13,7 +13,7 @@
  * Estrutura de um Hospital
  *
  * Contém as informações do hospital sendo elas:
- * - O relogio do hospital
+ * - O relógio do hospital
  * - Os pacientes lidos do arquivo
  * - As filas de cada procedimento e de cada urgência,
  * ou seja, cada índice da fila corresponde à urgência,

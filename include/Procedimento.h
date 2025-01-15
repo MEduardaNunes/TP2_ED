@@ -6,7 +6,7 @@
  *
  * Armazena as informações de um Procedimento do hospital,
  * sendo elas o tempo de atendimento médio, a quantidade
- * de atendentes e as unidades.
+ * de atendentes e a quantidade de unidades ocupadas.
 */
 typedef struct {
     float tempo;

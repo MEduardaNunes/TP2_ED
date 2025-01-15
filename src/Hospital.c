@@ -135,9 +135,8 @@ Procedimento* determinaProcedimento(Paciente *p, Hospital *hospital) {
  * \brief Muda o estado de um Paciente
  *
  * Essa função recebe um Hospital e um paciente, e muda o
- * paciente para o próximo estado, além de atualizar as 
- * datas do Paciente. Também atualiza os dados da unidade
- * a ser ocupada ou desocupada.
+ * paciente para o próximo estado, além de atualizar a data final.
+ * Também atualiza os dados da unidade a ser ocupada ou desocupada.
  * 
  * \param p O paciente a ser mudado de estado.
  * \param hospital O hospital em que se encontra o paciente.
@@ -155,19 +154,14 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
     if (p->estado == 2) return;
 
     Procedimento* proc = determinaProcedimento(p, hospital);
-    double qntd_proc = 0.0;
-    if (p->estado == 3 || p->estado == 5) qntd_proc = 1.0;
-    else if (p->estado == 7) qntd_proc = (double) p->quantidades[MEDH  - 2];
-    else if (p->estado == 9) qntd_proc = (double) p->quantidades[TESL - 2];
-    else if (p->estado == 11) qntd_proc = (double) p->quantidades[EXAI - 2];
-    else if (p->estado == 13) qntd_proc = (double) p->quantidades[INME - 2];
+    double qntd_proc = determinaQuantidade(p);
 
     if (p->estado % 2 == 0) {
         //desocupando unidade
         proc->unidadesOcupadas--;
 
         //atualizando estatisticas do paciente
-        if (p->estado == 6 && p->alta) p->estado = 14;
+        if (p->estado == 6 && p->alta) p->estado = 14; //paciente que teve alta
         p->dataFim = hospital->relogioHospital;
 
     } else {
@@ -286,7 +280,7 @@ void verificaProcedimento(int id, Hospital *hospital) {
  * Essa função recebe um Hospital e realiza todos os eventos
  * desse hospital, sendo eles: enviar os pacientes para 
  * procedimentos e filas necessárias. Além disso, atualiza os
- * tempos ociosos e de atendimento de cada Paciente e de Unidade.
+ * tempos ociosos de cada Paciente.
  * 
  * \param hospital O Hospital a ser simulado.
 */

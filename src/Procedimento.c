@@ -10,8 +10,7 @@
  *
  * Inicializa um novo Procedimento com as informações lidas
  * no arquivo de entrada, como o tempo médio e a quantidade
- * de atendentes doprocedimento, além de inicializar as 
- * unidades do Procedimento.
+ * de atendentes do procedimento..
  * 
  * \param tempo O tempo médio do procedimento.
  * \param qA A quantidade de unidades disponíveis.

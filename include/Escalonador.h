@@ -6,7 +6,7 @@
 /*
  * Estrutura de um Escalonador
  *
- * Simula um minHeap em um vetor e 
+ * Simula um minHeap em um vetor,
  * armazena a quantidade de pacientes, 
  * os pacientes e o tamanho máximo.
 */

@@ -9,7 +9,7 @@
  * \brief Construtor de Escalonador
  *
  * Inicializa um novo Escalonador, com quantidade igual a 0
- * e inicializa as posições dos pacientes como nulo.
+ * e inicializa as posições dos pacientes com nulo.
  */
 Escalonador inicializaEscalonador(int qntdMax) {
     erroAssert(qntdMax > 0, "Tamanho invalido.");
@@ -26,7 +26,7 @@ Escalonador inicializaEscalonador(int qntdMax) {
 
 
 /*
- * \brief Calcula a posição do ancestral de uma posicao
+ * \brief Calcula a posição do ancestral de uma posição
  *
  * Essa função calcula a posição do ancestral de uma posição
  * recebida de um Paciente e restorna essa posição.
