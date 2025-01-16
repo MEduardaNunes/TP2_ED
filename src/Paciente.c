@@ -89,23 +89,15 @@ Paciente* inicializaPaciente(float id, int alta, int ano, int mes, int dia, floa
  * \param op A operação de comparação dos Pacientes.
  * \return O resultado da comparação dos pacientes (0 ou 1).
 */
-int comparaPacientes(Paciente *p1, Paciente *p2, char *op) {
-    if((strcmp("<", op) && strcmp(">", op)) || !p1 || !p2) {
-        avisoAssert(!strcmp("<", op) || !strcmp(">", op), "Operacao invalida.");
+int pacienteMenor(Paciente *p1, Paciente *p2) {
+    if(!p1 || !p2) {
         avisoAssert(p1, "Paciente nulo.");
         avisoAssert(p2, "Paciente nulo.");
         return -1;
     }
 
-    if (!strcmp("<", op)) {
-        if (p1->dataFim == p2->dataFim) return p1->id < p2->id;
-        return p1->dataFim < p2->dataFim;
-    }
-    
-    if (!strcmp(">", op)) {
-        if (p1->dataFim == p2->dataFim) return p1->id > p2->id;
-        return p1->dataFim > p2->dataFim;
-    }
+    if (p1->dataFim == p2->dataFim) return p1->id < p2->id;
+    return p1->dataFim < p2->dataFim;
 }
 
 
@@ -137,20 +129,6 @@ double determinaQuantidade(Paciente *p) {
 
 
 /*
- * \brief Arredonda uma data
- *
- * Essa função recebe uma estrutura time_t e arredonda
- * para o minuto mais próximo.
- * 
- * \param t O tempo a ser arredondado.
- * \return O tempo arredondado.
-*/
-time_t arredondaTime(time_t t) {
-    return ((t + 30) / 60) * 60;
-}
-
-
-/*
  * \brief Imprime um Paciente
  *
  * Essa função recebe um Paciente e imprime suas informações
@@ -163,17 +141,13 @@ void imprimePaciente(Paciente *p) {
         avisoAssert(p, "Paciente nulo.");
         return;
     }
-
-    //arredondando data para minuto mais proximo
-    time_t inicio = arredondaTime(p->dataAdmissao);
-    time_t fim = arredondaTime(p->dataFim);
     
     //impressao das informações do paciente
-    char *data_inicio = ctime(&inicio);
+    char *data_inicio = ctime(& p->dataAdmissao);
     data_inicio[strlen(data_inicio) - 1] = '\0';
     printf("%.0f %s ", p->id, data_inicio);
 
-    char *data_fim = ctime(&fim);
+    char *data_fim = ctime(&p->dataFim);
     data_fim[strlen(data_fim) - 1] = '\0';
     printf("%s ", data_fim);
 

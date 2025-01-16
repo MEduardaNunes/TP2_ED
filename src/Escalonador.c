@@ -107,7 +107,7 @@ void insereEvento(Escalonador *e, Paciente *p) {
     int j = getAncestral(i);
     Paciente *paciente_aux;
 
-    while (comparaPacientes(e->pacientes[i], e->pacientes[j], "<")) {
+    while (pacienteMenor(e->pacientes[i], e->pacientes[j])) {
         paciente_aux = e->pacientes[i];
         e->pacientes[i] = e->pacientes[j];
         e->pacientes[j] = paciente_aux;
@@ -148,9 +148,9 @@ Paciente* retiraProximoEvento(Escalonador *e) {
 
     if (esq < e->qntd) {
         if (esq < e->qntd && dir >= e->qntd) dir = esq;
-        int s = (comparaPacientes(e->pacientes[esq], e->pacientes[dir], "<") ? esq : dir);
+        int s = (pacienteMenor(e->pacientes[esq], e->pacientes[dir]) ? esq : dir);
 
-        while (comparaPacientes(e->pacientes[i], e->pacientes[s], ">")) {
+        while (pacienteMenor(e->pacientes[s], e->pacientes[i])) {
             paciente_aux = e->pacientes[i];
             e->pacientes[i] = e->pacientes[s];
             e->pacientes[s] = paciente_aux;
@@ -159,7 +159,7 @@ Paciente* retiraProximoEvento(Escalonador *e) {
             esq = getSucessorEsq(i), dir = getSucessorDir(i);
             if (esq >= e->qntd && dir >= e->qntd) break;
             if (esq < e->qntd && dir >= e->qntd) dir = esq;
-            s = (comparaPacientes(e->pacientes[esq], e->pacientes[dir], "<") ? esq : dir);
+            s = (pacienteMenor(e->pacientes[esq], e->pacientes[dir]) ? esq : dir);
         }
     }
 
