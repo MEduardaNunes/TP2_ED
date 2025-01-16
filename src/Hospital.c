@@ -92,7 +92,6 @@ Hospital* preencheHospital(char *nomeArq) {
         }
     }
 
-
     //inicializar filas
     hospital->filas = inicializaFilas(qntdPacientes);
 
@@ -165,6 +164,9 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
         p->dataFim = hospital->relogioHospital;
 
     } else {
+        //atualizando tempo ocioso
+        p->tempoOcioso += (float) (hospital->relogioHospital - p->dataFim) / 3600.0;
+        
         //ocupando unidade
         proc->unidadesOcupadas++;
         
@@ -311,15 +313,6 @@ void simulaHospital(Hospital *hospital) {
         mudaEstado(paciente, hospital);
         if (paciente->estado != 14) moveParaFila(paciente, hospital);
         moveParaAtendimento(hospital);
-    }
-
-    //atualizando tempo ocioso
-    for (int i = 0; i < hospital->qntdPacientes; i++) {
-        double inicio = hospital->pacientesHospital[i]->dataAdmissao;
-        double fim = hospital->pacientesHospital[i]->dataFim;
-        double atendido = (double) hospital->pacientesHospital[i]->tempoAtendido;
-
-        hospital->pacientesHospital[i]->tempoOcioso = (float) (((fim - inicio) / 3600.0) - atendido);
     }
 }
 

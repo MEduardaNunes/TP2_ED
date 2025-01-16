@@ -33,8 +33,8 @@ typedef struct {
 
 Paciente* inicializaPaciente(float id, int alta, int ano, int mes, int dia, float hora, int gu, int qMH, int qTL, int qEI, int qIM);
 int comparaPacientes(Paciente *p1, Paciente *p2, char *op);
+double determinaQuantidade(Paciente *p);
 time_t arredondaTime(time_t t);
 void imprimePaciente(Paciente *p);
-double determinaQuantidade(Paciente *p);
 
 #endif
