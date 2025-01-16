@@ -16,7 +16,7 @@
  * \param qA A quantidade de unidades disponíveis.
  * \return O novo Procedimento.
  */
-Procedimento* inicializaProcedimento(float tempo, int qA) {
+Procedimento* inicializaProcedimento(double tempo, int qA) {
     if (tempo < 0 || qA < 0) {
         avisoAssert(tempo >= 0, "Tempo inválido.");
         avisoAssert(qA >= 0, "Quantidade inválida");
@@ -68,9 +68,7 @@ void finalizaProcedimentos(Procedimento **p) {
         return;
     }
 
-    for (int i = 0; i < QPROC; i++) {
-        free(p[i]);
-    }
+    for (int i = 0; i < QPROC; i++) free(p[i]);
 
     free(p);
 }

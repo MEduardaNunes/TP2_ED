@@ -9,13 +9,13 @@
  * de atendentes e a quantidade de unidades ocupadas.
 */
 typedef struct {
-    float tempo;
+    double tempo;
     int qntdAtendentes;
     int unidadesOcupadas;
 } Procedimento;
 
 
-Procedimento* inicializaProcedimento(float tempo, int qA);
+Procedimento* inicializaProcedimento(double tempo, int qA);
 int procedimentoOcupado(Procedimento *p);
 void finalizaProcedimentos(Procedimento **p);
 

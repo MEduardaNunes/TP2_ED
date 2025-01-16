@@ -26,8 +26,8 @@ typedef struct {
     //estado e estatisticas
     int estado;
     time_t dataFim;
-    float tempoAtendido;
-    float tempoOcioso;
+    double tempoAtendido;
+    double tempoOcioso;
 } Paciente;
 
 

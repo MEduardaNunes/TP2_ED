@@ -164,9 +164,11 @@ void imprimePaciente(Paciente *p) {
         return;
     }
 
+    //arredondando data para minuto mais proximo
     time_t inicio = arredondaTime(p->dataAdmissao);
     time_t fim = arredondaTime(p->dataFim);
     
+    //impressao das informações do paciente
     char *data_inicio = ctime(&inicio);
     data_inicio[strlen(data_inicio) - 1] = '\0';
     printf("%.0f %s ", p->id, data_inicio);

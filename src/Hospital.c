@@ -59,14 +59,14 @@ Hospital* preencheHospital(char *nomeArq) {
     erroAssert(arquivoEntrada, "Arquivo nao encontrado.");
 
     int qntd_atendente_proc;
-    float tempo_proc;
+    double tempo_proc;
 
     //leitura procedimentos
     hospital->procedimentos = (Procedimento**) malloc(sizeof(Procedimento*) * QPROC);
     erroAssert(hospital->procedimentos, "Memoria insuficiente");
 
     for (int i = 0; i < QPROC; i++) {
-        fscanf(arquivoEntrada, "%f %d", &tempo_proc, &qntd_atendente_proc);
+        fscanf(arquivoEntrada, "%lf %d", &tempo_proc, &qntd_atendente_proc);
         hospital->procedimentos[i] = inicializaProcedimento(tempo_proc, qntd_atendente_proc);
     }
 
@@ -165,13 +165,13 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
 
     } else {
         //atualizando tempo ocioso
-        p->tempoOcioso += (float) (hospital->relogioHospital - p->dataFim) / 3600.0;
+        p->tempoOcioso += (float) ((hospital->relogioHospital - p->dataFim) / 3600.0);
         
         //ocupando unidade
         proc->unidadesOcupadas++;
         
         //atualizando tempo final
-        double segs_totais = (double) (proc->tempo * qntd_proc * 3600.0);
+        double segs_totais = proc->tempo * qntd_proc * 3600;
         p->dataFim = hospital->relogioHospital + segs_totais;
     }   
 }
