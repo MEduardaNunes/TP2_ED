@@ -157,7 +157,11 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
 
     if (p->estado % 2 == 0) {
         //desocupando unidade
-        proc->unidadesOcupadas--;
+        if (p->idUnidade != -1) {
+            proc->unidades[p->idUnidade].ocupado = 0;
+            proc->unidades[p->idUnidade].ultimaData = hospital->relogioHospital;
+            p->idUnidade = -1;
+        }
 
         //atualizando estatisticas do paciente
         if (p->estado == 6 && p->alta) p->estado = 14; //paciente que teve alta
@@ -165,10 +169,16 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
 
     } else {
         //atualizando tempo ocioso
-        p->tempoOcioso += (float) ((hospital->relogioHospital - p->dataFim) / 3600.0);
+        p->tempoOcioso += (double) ((hospital->relogioHospital - p->dataFim) / 3600.0);
         
         //ocupando unidade
-        proc->unidadesOcupadas++;
+        int id = achaUnidade(proc);
+        if (id != -1) {
+            p->idUnidade = id;
+            proc->unidades[id].tempoOcioso += (double) ((hospital->relogioHospital - proc->unidades[id].ultimaData) / 3600.0);
+            proc->unidades[id].ultimaData = hospital->relogioHospital;
+            proc->unidades[id].ocupado = 1;
+        }
         
         //atualizando tempo final
         double segs_totais = proc->tempo * qntd_proc * 3600;
@@ -296,6 +306,10 @@ void simulaHospital(Hospital *hospital) {
     for (int i = 0; i < hospital->qntdPacientes; i++)
         insereEvento(&hospital->escalonadorHospital, hospital->pacientesHospital[i]);
 
+    //inicializando horas das unidades
+    for (int i = 0; i < QPROC; i++)
+        inicializaHora(hospital->procedimentos[i], hospital->escalonadorHospital.pacientes[0]->dataFim);
+
     //simular eventos no hospital
     while (!escalonadorVazio(&hospital->escalonadorHospital)) {
         //proximo evento
@@ -314,6 +328,10 @@ void simulaHospital(Hospital *hospital) {
         if (paciente->estado != 14) moveParaFila(paciente, hospital);
         moveParaAtendimento(hospital);
     }
+
+    //finalizando hroas das unidades
+    for (int i = 0; i < QPROC; i++)
+        finalizaHora(hospital->procedimentos[i], hospital->relogioHospital);
 }
 
 

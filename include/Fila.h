@@ -7,8 +7,8 @@
 /*
  * Estrutura de uma Fila
  *
- * Armazena as informações da fila de Pacientes,
- * sendo elas frente, tras e tamanho máximo.
+ * Armazena as informações da fila de Pacientes, sendo elas
+ * frente, tras e tamanho máximo.
 */
 typedef struct {
     int frente;

@@ -12,8 +12,8 @@
  * da data de adimissão (ano, mês, dia e hora), o grau de urgência,
  * a quantidade de medidas hospitalares, de testes de laboratório,
  * de exames de imagem e de instrumentos/medicamentos, o estado
- * do Paciente, dataFim e os horários de tempo em que o Paciente
- * esteve ocioso e em atendimento.
+ * do Paciente, o id da Unidade ocupada, dataFim e os horários de
+ * tempo em que o Paciente esteve ocioso e em atendimento.
 */
 typedef struct {
     //prontuario do paciente
@@ -25,6 +25,7 @@ typedef struct {
 
     //estado e estatisticas
     int estado;
+    int idUnidade;
     time_t dataFim;
     double tempoAtendido;
     double tempoOcioso;

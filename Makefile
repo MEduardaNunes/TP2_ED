@@ -10,11 +10,14 @@
 ./obj/Paciente.o: ./include/Paciente.h  ./include/Hospital.h ./src/Paciente.c
 	gcc -c ./src/Paciente.c -o ./obj/Paciente.o
 
-./obj/Procedimento.o: ./include/Procedimento.h  ./src/Procedimento.c
+./obj/Procedimento.o: ./include/Procedimento.h ./include/Unidade.h ./src/Procedimento.c
 	gcc -c ./src/Procedimento.c -o ./obj/Procedimento.o
 
-./bin/tp2.out: ./obj/Escalonador.o ./obj/Fila.o ./obj/Hospital.o ./obj/Paciente.o ./obj/Procedimento.o ./src/main.c
-	gcc -g ./obj/Escalonador.o ./obj/Fila.o ./obj/Hospital.o ./obj/Paciente.o ./obj/Procedimento.o ./src/main.c -o ./bin/tp2.out
+./obj/Unidade.o: ./include/Unidade.h ./src/Unidade.c
+	gcc -c ./src/Unidade.c -o ./obj/Unidade.o
+
+./bin/tp2.out: ./obj/Escalonador.o ./obj/Fila.o ./obj/Hospital.o ./obj/Paciente.o ./obj/Procedimento.o ./obj/Unidade.o ./src/main.c
+	gcc -g ./obj/Escalonador.o ./obj/Fila.o ./obj/Hospital.o ./obj/Paciente.o ./obj/Procedimento.o ./obj/Unidade.o ./src/main.c -o ./bin/tp2.out
 
 clean:
 	rm -f ./obj/*.o ./bin/tp2.out

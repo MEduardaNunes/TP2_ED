@@ -3,12 +3,12 @@
 
 #include "Paciente.h"
 
+
 /*
  * Estrutura de um Escalonador
  *
- * Simula um minHeap em um vetor,
- * armazena a quantidade de pacientes, 
- * os pacientes e o tamanho máximo.
+ * Simula um minHeap em um vetor, armazena a quantidade
+ * de pacientes, os pacientes e o tamanho máximo.
 */
 typedef struct {
     int qntd;
