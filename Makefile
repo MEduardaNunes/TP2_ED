@@ -20,7 +20,7 @@ clean:
 	rm -f ./obj/*.o ./bin/tp2.out
 
 all: ./bin/tp2.out
-	./bin/tp2.out teste.csv
+	./bin/tp2.out ./entradas/teste.csv
 
 teste: ./bin/tp2.out
-	valgrind --leak-check=full --show-leak-kinds=all -s ./bin/tp2.out teste.csv
+	valgrind --leak-check=full --show-leak-kinds=all -s ./bin/tp2.out ./entradas/teste.csv
