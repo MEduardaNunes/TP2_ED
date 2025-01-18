@@ -24,4 +24,3 @@ all: ./bin/tp2.out
 
 teste: ./bin/tp2.out
 	valgrind --leak-check=full --show-leak-kinds=all -s ./bin/tp2.out teste.csv
-
