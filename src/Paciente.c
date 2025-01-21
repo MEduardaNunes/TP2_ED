@@ -119,11 +119,12 @@ double determinaQuantidade(Paciente *p) {
 
     double qntd_proc = 0.0;
 
-    if (p->estado == 3 || p->estado == 5) qntd_proc = 1.0;
-    else if (p->estado == 7) qntd_proc = (double) p->quantidades[MH];
-    else if (p->estado == 9) qntd_proc = (double) p->quantidades[TL];
-    else if (p->estado == 11) qntd_proc = (double) p->quantidades[EI];
-    else if (p->estado == 13) qntd_proc = (double) p->quantidades[IM];
+    if (p->estado >= 2 && p->estado <= 5) qntd_proc = 1.0;
+    else if (p->estado == 6 || p->estado == 7) qntd_proc = (double) p->quantidades[MH];
+    else if (p->estado == 8 || p->estado == 9) qntd_proc = (double) p->quantidades[TL];
+    else if (p->estado == 10 || p->estado == 11) qntd_proc = (double) p->quantidades[EI];
+    else if (p->estado == 12 || p->estado == 13) qntd_proc = (double) p->quantidades[IM];
+    else qntd_proc = -1.0;
 
     return qntd_proc;
 }

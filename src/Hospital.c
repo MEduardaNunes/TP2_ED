@@ -165,6 +165,13 @@ void mudaEstado(Paciente *p, Hospital *hospital) {
 
         //atualizando estatisticas do paciente
         if (p->estado == 6 && p->alta) p->estado = 14; //paciente que teve alta
+
+        //EXTRA
+        // while (!qntd_proc && p->estado != 14) {
+        //     p->estado += 2;
+        //     qntd_proc = determinaQuantidade(p);
+        // }
+
         p->dataFim = hospital->relogioHospital;
 
     } else {
@@ -330,8 +337,9 @@ void simulaHospital(Hospital *hospital) {
     }
 
     //finalizando hroas das unidades
-    for (int i = 0; i < QPROC; i++)
+    for (int i = 0; i < QPROC; i++) {
         finalizaHora(hospital->procedimentos[i], hospital->relogioHospital);
+    }
 }
 
 
@@ -349,8 +357,27 @@ void imprimeHospital(Hospital *hospital) {
         return;
     }
 
-    for (int i = 0; i < hospital->qntdPacientes; i++)
+    double tempo_ocioso = 0.0;
+
+    for (int i = 0; i < hospital->qntdPacientes; i++) {
         imprimePaciente(hospital->pacientesHospital[i]);
+        tempo_ocioso += hospital->pacientesHospital[i]->tempoOcioso;
+    }
+ 
+    printf("Média espera paciente: %.2lf\n",  tempo_ocioso / (double) hospital->qntdPacientes);
+
+    tempo_ocioso = 0.0;
+    double qntd_atendentes = 0.0;
+
+    for (int i = 0; i < QPROC; i++) {
+        qntd_atendentes += hospital->procedimentos[i]->qntdAtendentes;
+
+        for (int j = 0; j < hospital->procedimentos[i]->qntdAtendentes; j++) {
+            tempo_ocioso += hospital->procedimentos[i]->unidades->tempoOcioso;
+        }
+    }
+
+    printf("Média espera unidades: %.2lf\n", tempo_ocioso / qntd_atendentes);
 }
 
 

@@ -106,7 +106,7 @@ int procedimentoOcupado(Procedimento *p) {
  */
 void finalizaHora(Procedimento *p, time_t horaFinal) {
     for (int i = 0; i < p->qntdAtendentes; i++) {
-        p->unidades[i].tempoOcioso += ((horaFinal - p->unidades[i].ultimaData) / 3600.0);
+        p->unidades[i].tempoOcioso += (double) ((horaFinal - p->unidades[i].ultimaData) / 3600.0);
         p->unidades[i].ultimaData = horaFinal;
     }
 }
